@@ -1,0 +1,58 @@
+<div class="head">
+  <form>
+    <div class="row">
+      <h4 class="text-center topspace">Set Orchestrator</h4>
+      <div class="row">
+        <div class="small-6 columns">
+          <label for="right-label" class="right inline">Public IP address of localhost</label>
+        </div>
+        <div class="small-2 columns left">
+          <input type="text" id="right-label" ng-model="ip">
+        </div>
+      </div>
+      <h4 class="text-center topspace">Network IDs</h4>
+      <div class="row">
+        <div class="small-6 columns">
+          <label for="right-label" class="right inline">Select Tenant name to prefill IDs</label>
+        </div>
+        <div class="small-2 columns left">
+          <select ng-model="net" ng-init="net = net || networkIDs[0].ids" ng-options="network.ids as network.name for network in networkIDs"></select>
+        </div>
+      </div>
+      <div class="row">
+        <div class="small-6 columns">
+          <label for="right-label" class="right inline">public_net</label>
+        </div>
+        <div class="small-4 columns left">
+          <input type="text" id="right-label" placeholder="2e2bc7f9-c29c-467c-94b6-5ef3724d79ac" ng-model="net.public_net">
+        </div>
+      </div>
+      <div class="row">
+          <div class="small-6 columns">
+            <label for="right-label" class="right inline">private_net</label>
+          </div>
+          <div class="small-4 columns left">
+            <input type="text" id="right-label" placeholder="fd704f1b-9238-4c2c-a0f5-4ffb4543e33a" ng-model="net.private_net">
+          </div>
+      </div>
+      <div class="row">
+          <div class="small-6 columns">
+            <label for="right-label" class="right inline">private_subnet</label>
+          </div>
+          <div class="small-4 columns left">
+            <input type="text" id="right-label" placeholder="ab4595bf-12d5-4e92-baa8-b5dfb3c1a31d" ng-model="net.private_subnet">
+          </div>
+      </div>
+      <div class="row finalise">
+        <div class="small-12">
+          {{net}}
+        </div>
+      </div>
+      <div class="row finalise">
+        <div class="small-12">
+          <a href="#/" ng-click="updateNetwork(net)" type="submit" class="button small success">Save</a>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

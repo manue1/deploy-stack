@@ -1,0 +1,137 @@
+<div class="head">
+  <form id="deploy" name="deploy" novalidate>
+    <div class="row">
+      <accordion>
+        <accordion-group heading="Cloud information" is-open="true">
+          <div class="row">
+            <div class="small-8">
+              <div class="row">
+                  <div class="small-3 columns">
+                    <label for="right-label" class="right inline">Name</label>
+                  </div>
+                  <div class="small-9 columns">
+                    <input type="text" id="right-label" placeholder="Cloud name" required ng-model="cloudData.name">
+                  </div>
+              </div>
+              <div class="row">
+                  <div class="small-3 columns">
+                    <label for="right-label" class="right inline">Key name</label>
+                  </div>
+                  <div class="small-9 columns">
+                    <input type="text" id="right-label" placeholder="Key name" ng-model="cloudData.key_name">
+                  </div>
+              </div>
+            </div>
+          </div>
+        </accordion-group>
+        <accordion-group heading="Flavor selection" is-open="false">
+          <div class="row">
+            <div class="small-8">
+              <div class="row">
+                  <div class="small-4 columns">
+                    <label for="right-label" class="right inline">Connector flavor</label>
+                  </div>
+                  <div class="small-4 columns left">
+                    <select ng-model="cloudData.connector.flavor" ng-options="flavor for flavor in flavors"></select>
+                  </div>
+              </div>
+              <div class="row">
+                  <div class="small-4 columns">
+                    <label for="right-label" class="right inline">Broker flavor</label>
+                  </div>
+                  <div class="small-4 columns left">
+                    <select ng-model="cloudData.broker.flavor" ng-options="flavor for flavor in flavors"></select>
+                  </div>
+              </div>
+              <div class="row">
+                  <div class="small-4 columns">
+                    <label for="right-label" class="right inline">Media Server group flavor</label>
+                  </div>
+                  <div class="small-4 columns left">
+                    <select ng-model="cloudData.media_server_group.flavor" ng-options="flavor for flavor in flavors"></select>
+                  </div>
+              </div>
+            </div>
+          </div>
+        </accordion-group>
+        <accordion-group heading="Auto Scaling Configuration - Media Server group" is-open="false">
+          <div class="row">
+            <div class="small-8">
+              <div class="row">
+                  <div class="small-4 columns">
+                    <label for="min-capacity" class="right inline">Minimal capacity</label>
+                  </div>
+                  <div class="small-2 columns left">
+                    <select ng-model="cloudData.media_server_group.min_size" ng-options="capacity for capacity in capacities"></select>
+                  </div>
+              </div>
+              <div class="row">
+                  <div class="small-4 columns">
+                    <label for="max-capacity" class="right inline">Maximal capacity</label>
+                  </div>
+                  <div class="small-2 columns left">
+                    <select ng-model="cloudData.media_server_group.max_size" ng-options="capacity for capacity in capacities"></select>
+                  </div>
+              </div>
+              <div class="row">
+                <div class="large-12 columns">
+                  <h5>Auto Scaling policies</h5>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <form name="policiesForm">
+            <div class="large-12 columns policies-table">
+              <table>
+                <thead>
+                  <tr>
+                    <th ng-repeat="policy in policiesLabels" class='col{{$index+1}}'>{{policy}}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr ng-repeat="policy in policiesCount">
+                    <td><input type="text" required ng-model="policiesData[$index].name"></td>
+                    <td><select ng-init="policiesData[$index].alarm.meter_name = policiesData[$index].alarm.meter_name || alarmsMeter[1]" ng-model="policiesData[$index].alarm.meter_name" ng-options="alarm for alarm in alarmsMeter" required></select></td>
+                    <td><select ng-init="policiesData[$index].alarm.statistic = policiesData[$index].alarm.statistic || alarmsStatistics[3]" ng-model="policiesData[$index].alarm.statistic" ng-options="alarm for alarm in alarmsStatistics" required></select></td>
+                    <td><select ng-init="policiesData[$index].alarm.comparison_operator = policiesData[$index].alarm.comparison_operator || alarmsComparison[1].value" ng-model="policiesData[$index].alarm.comparison_operator" ng-options="obj.value as obj.text for obj in alarmsComparison" required></select></td>
+                    <td><input type="text" required ng-model="policiesData[$index].alarm.threshold"></td>
+                    <td><select ng-init="policiesData[$index].alarm.period = policiesData[$index].alarm.period || alarmsPeriod[0]" ng-model="policiesData[$index].alarm.period" ng-options="alarm for alarm in alarmsPeriod" required></select></td>
+                    <td><select ng-init="policiesData[$index].action.adjustment_type = policiesData[$index].action.adjustment_type || actionsAdjustmentTypes[0].value" ng-model="policiesData[$index].action.adjustment_type" ng-options="obj.value as obj.text for obj in actionsAdjustmentTypes" required></select></td>
+                    <td><select ng-init="policiesData[$index].action.scaling_adjustment = policiesData[$index].action.scaling_adjustment || actionsScalingAdjustment[2]" ng-model="policiesData[$index].action.scaling_adjustment" ng-options="action for action in actionsScalingAdjustment" required></select></td>
+                    <td><select ng-init="policiesData[$index].action.cooldown = policiesData[$index].action.cooldown || actionsCooldown[0]" ng-model="policiesData[$index].action.cooldown" ng-options="action for action in actionsCooldown" required></select></td>
+                    <td><button class="small alert delete-policy" ng-click="deletePolicy($index)">X</button></td>
+                  </tr>
+                </tbody>
+              </table>
+              <div class="row">
+                <div class="text-center">
+                  <button class="small" ng-click="addPolicy()">Add Policy</button>
+                </div>
+              </div>
+            </div>
+
+          </form>
+          </div>
+        </accordion-group>
+      </accordion>
+    </div>
+    <div class="row finalise">
+      <div class="small-12">
+        <button ng-click="submitForm()" type="submit" class="button small success" value="Deploy">Deploy</button>
+      </div>
+    </div>
+    <div class="row finalise">
+      <div class="small-12">
+        {{url}}
+        {{ip}}
+        {{formData}}
+      </div>
+    </div>
+    <div ng-show="alerts" class="row">
+      <div class="large-6 middle">
+        <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
+      </div>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,224 @@
+<div class="head">
+  <div ng-hide="stackCurrent" class="no-stack">
+    <div ng-show="alerts" class="row">
+      <div class="large-4 middle">
+        <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
+      </div>
+    </div>
+    <h4>Retrieving stack information.</h4>
+    <div class="row progress-box">
+      <div class="large-3 middle">
+        <div class="bar-box">
+          <div class="bar">
+            <div class="bar-progress"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div ng-show="stackCurrent">
+    <div class="row">
+      <div class="large-12 columns text-center">
+        <h3>{{stackCurrent.stack_name}}</h3>
+      </div>
+    </div>
+      <div class="row">
+      <div class="large-12 columns text-center">
+        <h6>Stack status:</h6>
+        <h5>{{stackCurrent.stack_status}}</h5>
+      </div>
+    </div>
+    <div class="row">
+      <div class="large-3 columns component" id="connector">
+        <div class="row">
+          <div class="large-12 columns component-title">
+            <h4>Control server</h4>
+          </div>
+        </div>
+        <div class="row">
+          <div class="large-12 columns stat">
+            <h6>Flavor</h6>
+            <span>{{stackCurrent.resources.control_server.flavor}}</span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="large-12 columns stat">
+            <h6>Image</h6>
+            <span>{{stackCurrent.resources.control_server.image}}</span>
+          </div>
+        </div>
+        <div ng-repeat="ip in stackCurrent.resources.control_server.addresses.internal_nubomedia" class="row">
+          <div class="large-12 columns stat">
+            <h6>IP address</h6>
+            <span>{{stackCurrent.resources.control_server.addresses.internal_nubomedia[$index].addr}}</span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="large-12 columns stat">
+            <h6>Status</h6>
+            <span>{{stackCurrent.resources.control_server.status}}</span>
+          </div>
+        </div>
+        <svg style="position: absolute;top:168px;left:248px;" width="125px" height="4px" viewBox="0 0 125 4">
+          <line x1="0" y1="0" x2="125" y2="0" style="stroke: #125079; stroke-width: 4;"/>
+        </svg>
+      </div>
+      <div class="large-3 columns component" id="broker">
+        <div class="row">
+          <div class="large-12 columns">
+            <h4 class="component-title">Broker</h4>
+          </div>
+        </div>
+        <div class="row">
+          <div class="large-12 columns stat">
+            <h6>Flavor</h6>
+            <span>{{stackCurrent.resources.broker.flavor}}</span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="large-12 columns stat">
+            <h6>Image</h6>
+            <span>{{stackCurrent.resources.broker.image}}</span>
+          </div>
+        </div>
+        <div ng-repeat="ip in stackCurrent.resources.broker.addresses.internal_nubomedia" class="row">
+            <div class="large-12 columns stat">
+              <h6>IP address</h6>
+              <span>{{stackCurrent.resources.broker.addresses.internal_nubomedia[$index].addr}}</span>
+            </div>
+          </div>
+        <div class="row">
+          <div class="large-12 columns stat">
+            <h6>Status</h6>
+            <span>{{stackCurrent.resources.broker.status}}</span>
+          </div>
+        </div>
+        <svg style="position: absolute;top:168px;left:248px;" width="125px" height="4px" viewBox="0 0 125 4">
+          <line x1="0" y1="0" x2="125" y2="0" style="stroke: #125079; stroke-width: 4;"/>
+        </svg>
+      </div>
+
+      <div class="large-3 columns component mediaservers">
+        <div class="row">
+          <div class="large-12 columns">
+            <h4 class="component-title">{{stackCurrent.resources.media_server_group.name}}</h4>
+          </div>
+        </div>
+        <div class="row">
+          <div class="large-12 columns stat">
+            <h6>Flavor</h6>
+            <span>{{stackCurrent.resources.media_server_group.flavor}}</span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="large-12 columns stat">
+            <h6>Image</h6>
+            <span>{{stackCurrent.resources.media_server_group.image}}</span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="large-12 columns stat">
+            <button ng-click="showPolicies = !showPolicies" ng-show="stackCurrent.resources.media_server_group.policies" class="policies-btn button small">View auto scaling policies</button>
+          </div>
+        </div>
+        <div ng-repeat="ms in msgResources" class="row">
+          <div class="large-12 columns mediaserver" id='ms{{$index+1}}'>
+            <h6><b>media_server-{{$index+1}}</b></h6>
+              <p class="item-title">Status</p>
+              <p class="item-value">{{ms.status}}</p>
+            <div ng-repeat="ip in ms.addresses.internal_nubomedia">
+              <p class="item-title">IP address</p>
+              <p class="item-value">{{ip.addr}}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- policies -->
+      <div ng-show="showPolicies" class="large-6 columns component policies">
+        <div class="row">
+          <div class="large-12 columns text-center">
+            <h3>Auto scaling policies</h3>
+          </div>
+        </div>
+        <div ng-repeat="policies in stackCurrent.resources.media_server_group.policies">
+          <div class="row">
+            <div class="large-12 columns">
+              <h4 class="component-title">{{policies.name}}</h4>
+            </div>
+          </div>
+          <div class="row">
+            <div class="large-6 columns">
+              <div class="row">
+                <div class="large-12 columns stat">
+                  <h5><b>Alarm</b></h5>
+                </div>
+              </div>
+              <div class="row">
+                <div class="large-12 columns stat">
+                  <h6>Meter name</h6>
+                  <span>{{policies.alarm.meter_name}}</span>
+                </div>
+              </div>
+              <div class="row">
+                <div class="large-12 columns stat">
+                  <h6>Statistic</h6>
+                  <span>{{policies.alarm.statistic}}</span>
+                </div>
+              </div>
+              <div class="row">
+                <div class="large-12 columns stat">
+                  <h6>Threshold</h6>
+                  <span>{{policies.alarm.threshold}}</span>
+                </div>
+              </div>
+              <div class="row">
+                <div class="large-12 columns stat">
+                  <h6>Comparison operator</h6>
+                  <span>{{policies.alarm.comparison_operator}}</span>
+                </div>
+              </div>
+              <div class="row">
+                <div class="large-12 columns stat">
+                  <h6>Cooldown period (s)</h6>
+                  <span>{{policies.alarm.period}}</span>
+                </div>
+              </div>
+            </div>
+            <div class="large-6 columns">
+              <div class="row">
+                <div class="large-12 columns stat">
+                  <h5><b>Action</b></h5>
+                </div>
+              </div>
+              <div class="row">
+                <div class="large-12 columns stat">
+                  <h6>Adjustment type</h6>
+                  <span>{{policies.action.adjustment_type}}</span>
+                </div>
+              </div>
+              <div class="row">
+                <div class="large-12 columns stat">
+                  <h6>Scaling adjustment</h6>
+                  <span>{{policies.action.scaling_adjustment}}</span>
+                </div>
+              </div>
+              <div class="row">
+                <div class="large-12 columns stat">
+                  <h6>Cooldown period</h6>
+                  <span>{{policies.action.cooldown}}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="row">
+      <div class="large-12 columns text-center">
+        <button ng-click="deleteStack()" class="delete button small alert">Delete stack</button>
+      </div>
+    </div>
+  </div>
+</div>
